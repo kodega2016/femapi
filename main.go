@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/kodega2016/femapi/internal/app"
+	"github.com/kodega2016/femapi/internal/routes"
 )
 
 func main() {
@@ -20,9 +21,11 @@ func main() {
 	}
 
 	app.Logger.Printf("we are running our application on port %d\n", port)
-	http.HandleFunc("/health", HealthCheck)
+	http.HandleFunc("/health", app.HealthCheck)
 
+	r := routes.SetupRoutes(app)
 	server := &http.Server{
+		Handler:      r,
 		Addr:         fmt.Sprintf(":%d", port),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
@@ -33,8 +36,4 @@ func main() {
 	if err != nil {
 		app.Logger.Fatal(err)
 	}
-}
-
-func HealthCheck(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Status is available\n")
 }
