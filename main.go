@@ -19,7 +19,7 @@ func main() {
 		panic(err)
 	}
 
-	app.Logger.Println("we are running our application...")
+	app.Logger.Printf("we are running our application on port %d\n", port)
 	http.HandleFunc("/health", HealthCheck)
 
 	server := &http.Server{
