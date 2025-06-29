@@ -38,3 +38,11 @@ After that we can pass the port number while running the server.
 ```bash
 go run main.go --port=9090
 ```
+
+### Chi Router
+
+We can use `chi` router to handle the routing in a more structured way.
+
+```go
+r := chi.NewRouter()
+```
