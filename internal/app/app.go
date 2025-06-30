@@ -2,22 +2,31 @@
 package app
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/kodega2016/femapi/internal/api"
+	"github.com/kodega2016/femapi/internal/store"
 )
 
 type Application struct {
 	Logger         *log.Logger
 	WorkoutHandler *api.WorkoutHanlder
+	DB             *sql.DB
 }
 
 func NewApplication() (*Application, error) {
-	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	pgDB, err := store.Open()
+	if err != nil {
+		return nil, err
+	}
 
+	defer pgDB.Close()
+
+	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
 	// our store goes here
 
 	// our handler goes here
@@ -26,6 +35,7 @@ func NewApplication() (*Application, error) {
 	app := &Application{
 		Logger:         logger,
 		WorkoutHandler: workoutHandler,
+		DB:             pgDB,
 	}
 
 	return app, nil
