@@ -31,3 +31,6 @@ go.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+#
+database
+./database
