@@ -1,4 +1,4 @@
--- +gooseUp
+-- +goose Up
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS workouts (
     id BIGSERIAL PRIMARY KEY,

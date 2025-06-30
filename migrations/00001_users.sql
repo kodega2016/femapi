@@ -1,5 +1,5 @@
 -- +goose Up
--- ++goose StatementBegin
+-- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,

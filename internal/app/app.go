@@ -10,6 +10,7 @@ import (
 
 	"github.com/kodega2016/femapi/internal/api"
 	"github.com/kodega2016/femapi/internal/store"
+	"github.com/kodega2016/femapi/migrations"
 )
 
 type Application struct {
@@ -23,8 +24,11 @@ func NewApplication() (*Application, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	defer pgDB.Close()
+	err = store.MigrateFS(pgDB, migrations.FS, ".")
+	if err != nil {
+		panic(err)
+	}
 
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
 	// our store goes here

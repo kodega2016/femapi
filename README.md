@@ -67,3 +67,15 @@ incrementally apply changes to the database schema.
 
 For example,we can create a new migration file to add new data field to the
 database table.
+
+Also make sure to always verify the syntax for the fs.
+```go
+//go:embed *.sql
+var FS embed.FS
+```
+
+There are .sql files inside migrations directory.
+
+```go
+err = store.MigrateFS(pgDB, migrations.FS, ".")
+```
