@@ -38,17 +38,14 @@ type WorkoutStore interface {
 }
 
 func (pg *PostgresWorkoutStore) CreateWorkout(workout *Workout) (*Workout, error) {
-
 	tx, err := pg.db.Begin()
 	if err != nil {
 		return nil, err
-
 	}
 
 	defer tx.Rollback()
 
-	query :=
-		`INSERT INTO workouts(title,description,duration,calories_burned)
+	query := `INSERT INTO workouts(title,description,duration,calories_burned)
 		VALUES($1,$2,$3,$4)
 		RETURNING id
 	`
@@ -79,5 +76,44 @@ func (pg *PostgresWorkoutStore) CreateWorkout(workout *Workout) (*Workout, error
 
 func (pg *PostgresWorkoutStore) GetWorkoutByID(id int64) (*Workout, error) {
 	workout := &Workout{}
+
+	query := `
+	SELECT id,title,description,duration_minutes,calories_burned
+	FROM workouts
+	WHERE id=$1
+	`
+
+	err := pg.db.QueryRow(query, id).Scan(&workout.ID, &workout.Title, &workout.Description, &workout.DurationInMinutes, &workout.CaloriesBurned)
+	if err != nil {
+		return nil, err
+	}
+
+	if err == sql.ErrNoRows {
+		return nil, nil // No workout found with the given ID
+	}
+
+	// lets get the entries for this workout
+	entryQuery := `
+	SELECT id,exercise_name,exercise_sets,reps,duration_seconds,weight,notes,order_index
+	FROM workout_entries
+	WHERE workout_id=$1
+	ORDER BY order_index
+	`
+
+	rows, err := pg.db.Query(entryQuery, id)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var entry WorkoutEntry
+		err := rows.Scan(&entry.ID, &entry.ExerciseName, &entry.ExerciseSets, &entry.Reps, &entry.DurationSeconds, &entry.Weight, &entry.Notes, &entry.OrderIndex)
+		if err != nil {
+			return nil, err
+		}
+		workout.Entries = append(workout.Entries, entry)
+	}
+
 	return workout, nil
 }
