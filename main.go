@@ -23,6 +23,9 @@ func main() {
 	app.Logger.Printf("we are running our application on port %d\n", port)
 	http.HandleFunc("/health", app.HealthCheck)
 
+	// close the database
+	defer app.DB.Close()
+
 	r := routes.SetupRoutes(app)
 	server := &http.Server{
 		Handler:      r,

@@ -9,7 +9,7 @@ type Workout struct {
 	Title             string         `json:"title"`
 	Description       string         `json:"description"`
 	CaloriesBurned    int            `json:"calories_burned"`
-	DurationInMinutes int            `json:"duratioon_minues"`
+	DurationInMinutes int            `json:"duration_minutes"`
 	Entries           []WorkoutEntry `json:"entries"`
 }
 
@@ -38,6 +38,7 @@ type WorkoutStore interface {
 }
 
 func (pg *PostgresWorkoutStore) CreateWorkout(workout *Workout) (*Workout, error) {
+
 	tx, err := pg.db.Begin()
 	if err != nil {
 		return nil, err
@@ -47,7 +48,7 @@ func (pg *PostgresWorkoutStore) CreateWorkout(workout *Workout) (*Workout, error
 	defer tx.Rollback()
 
 	query :=
-		`INSERT INTO workouts(title,description,duratioon_minues,calories_burned)
+		`INSERT INTO workouts(title,description,duration,calories_burned)
 		VALUES($1,$2,$3,$4)
 		RETURNING id
 	`

@@ -15,7 +15,7 @@ import (
 
 type Application struct {
 	Logger         *log.Logger
-	WorkoutHandler *api.WorkoutHanlder
+	WorkoutHandler *api.WorkoutHandler
 	DB             *sql.DB
 }
 
@@ -24,7 +24,6 @@ func NewApplication() (*Application, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer pgDB.Close()
 	err = store.MigrateFS(pgDB, migrations.FS, ".")
 	if err != nil {
 		panic(err)
@@ -32,9 +31,10 @@ func NewApplication() (*Application, error) {
 
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
 	// our store goes here
+	workoutStore := store.NewPostgresWorkoutStore(pgDB)
 
 	// our handler goes here
-	workoutHandler := api.NewWorkoutHandler()
+	workoutHandler := api.NewWorkoutHandler(workoutStore)
 
 	app := &Application{
 		Logger:         logger,
