@@ -34,7 +34,16 @@ func (wh *WorkoutHandler) HandleGetWorkoutByID(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	fmt.Printf("This is the correct workout:%d\n", workoutID)
+	workout, err := wh.workoutStore.GetWorkoutByID(workoutID)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "failed to fetch workout", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(workout)
 }
 
 func (wh *WorkoutHandler) HandleCreateWorkout(w http.ResponseWriter, r *http.Request) {
