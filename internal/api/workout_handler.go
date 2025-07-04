@@ -92,7 +92,7 @@ func (wh *WorkoutHandler) HandleUpdateWorkoutByID(w http.ResponseWriter, r *http
 	var updateWorkoutRequest struct {
 		Title           *string              `json:"title"`
 		Description     *string              `json:"description"`
-		DurationMinutes *int                 `json:"duration_minutes"`
+		DurationMinutes *int                 `json:"duration"`
 		CaloriesBurned  *int                 `json:"calories_burned"`
 		Entries         []store.WorkoutEntry `json:"entries"`
 	}

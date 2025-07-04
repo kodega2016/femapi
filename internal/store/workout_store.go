@@ -9,7 +9,7 @@ type Workout struct {
 	Title             string         `json:"title"`
 	Description       string         `json:"description"`
 	CaloriesBurned    int            `json:"calories_burned"`
-	DurationInMinutes int            `json:"duration_minutes"`
+	DurationInMinutes int            `json:"duration"`
 	Entries           []WorkoutEntry `json:"entries"`
 }
 
@@ -128,7 +128,7 @@ func (pg *PostgresWorkoutStore) UpdateWorkout(workout *Workout) error {
 
 	query := `
 	UPDATE workouts
-	SET title=$1,description=$2,duration_minutes=$3,calories_burned=$4
+	SET title=$1,description=$2,duration=$3,calories_burned=$4
 	WHERE id=$5
 	`
 
@@ -153,7 +153,7 @@ func (pg *PostgresWorkoutStore) UpdateWorkout(workout *Workout) error {
 	for _, entry := range workout.Entries {
 		query := `
 		INSERT INTO workout_entries(workout_id,exercise_name,exercise_sets,reps,duration_seconds,notes,order_index)
-		VALUES($1,$2,$3,$4,$5,$6,$7,$7,$8)
+		VALUES($1,$2,$3,$4,$5,$6,$7)
 		`
 
 		_, err := tx.Exec(query, workout.ID, entry.ExerciseName, entry.ExerciseSets, entry.Reps, entry.DurationSeconds, entry.Notes, entry.OrderIndex)
