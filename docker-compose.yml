@@ -13,12 +13,12 @@ services:
     restart: "unless-stopped"
 
   test-db:
-    container_name: "workoutDB"
+    container_name: "test-workoutDB"
     image: postgres:12.4-alpine
     volumes:
       - "./database/postgres-test-data:/var/lib/postgresql/data:rw"
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_DB: "postgres"
       POSTGRES_USER: "postgres"
