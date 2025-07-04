@@ -79,7 +79,7 @@ func (pg *PostgresWorkoutStore) GetWorkoutByID(id int64) (*Workout, error) {
 	workout := &Workout{}
 
 	query := `
-	SELECT id,title,description,duration_minutes,calories_burned
+	SELECT id,title,description,duration,calories_burned
 	FROM workouts
 	WHERE id=$1
 	`
