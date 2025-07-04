@@ -12,8 +12,6 @@ import (
 	"github.com/kodega2016/femapi/internal/app"
 	"github.com/kodega2016/femapi/internal/routes"
 	"github.com/newrelic/go-agent/v3/newrelic"
-
-	_ "github.com/newrelic/go-agent/v3/newrelic"
 )
 
 func main() {
