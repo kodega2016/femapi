@@ -32,6 +32,13 @@ func (wh *WorkoutHandler) HandleGetWorkoutByID(w http.ResponseWriter, r *http.Re
 	}
 
 	workout, err := wh.workoutStore.GetWorkoutByID(workoutID)
+
+	if err == sql.ErrNoRows {
+		wh.logger.Printf("ERROR:GetWorkoutByID:%v", err)
+		utils.WriteJSON(w, http.StatusNotFound, utils.Envelope{"error": "workout not found"})
+		return
+	}
+
 	if err != nil {
 		wh.logger.Printf("ERROR:GetWorkoutByID:%v", err)
 		utils.WriteJSON(w, http.StatusInternalServerError, utils.Envelope{"error": "internal server error"})

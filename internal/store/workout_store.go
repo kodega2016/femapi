@@ -91,7 +91,7 @@ func (pg *PostgresWorkoutStore) GetWorkoutByID(id int64) (*Workout, error) {
 	}
 
 	if err == sql.ErrNoRows {
-		return nil, nil // No workout found with the given ID
+		return nil, err // No workout found with the given ID
 	}
 
 	// lets get the entries for this workout
