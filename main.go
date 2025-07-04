@@ -3,11 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/kodega2016/femapi/internal/app"
 	"github.com/kodega2016/femapi/internal/routes"
+	"github.com/newrelic/go-agent/v3/newrelic"
+
+	_ "github.com/newrelic/go-agent/v3/newrelic"
 )
 
 func main() {
@@ -38,5 +44,20 @@ func main() {
 	err = server.ListenAndServe()
 	if err != nil {
 		app.Logger.Fatal(err)
+	}
+}
+
+func init() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("failed to load env:", err)
+	}
+	_, err = newrelic.NewApplication(
+		newrelic.ConfigAppName(os.Getenv("NEW_RELIC_APP_NAME")),
+		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_KEY")),
+		newrelic.ConfigAppLogForwardingEnabled(true),
+	)
+	if err != nil {
+		log.Fatal("failed to initialize new relic:", err)
 	}
 }
