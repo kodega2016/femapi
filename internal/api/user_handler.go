@@ -9,7 +9,6 @@ import (
 
 	"github.com/kodega2016/femapi/internal/store"
 	"github.com/kodega2016/femapi/internal/utils"
-	"github.com/zmap/zgrab2/lib/http"
 )
 
 type registerUserRequest struct {
