@@ -40,13 +40,13 @@ func (p *password) Matches(plaintestPassword string) (bool, error) {
 }
 
 type User struct {
-	ID           int         `json:"id"`
-	Username     string      `json:"username"`
-	Email        string      `json:"email"`
-	PasswordHash password    `json:"-"`
-	Bio          string      `json:"bio"`
-	CreatedAt    time.Time   `json:"created_at"`
-	UpdatedAt    time.Ticker `json:"updated_at"`
+	ID           int       `json:"id"`
+	Username     string    `json:"username"`
+	Email        string    `json:"email"`
+	PasswordHash password  `json:"-"`
+	Bio          string    `json:"bio"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 type PostgresUserStrore struct {
@@ -72,7 +72,7 @@ func (s *PostgresUserStrore) CreateUser(user *User) error {
 	RETURNING id,created_at,updated_at
 	`
 
-	err := s.db.QueryRow(query, user.Username, user.Email, user.PasswordHash, user.Bio).Scan(&user.ID, &user.CreatedAt, &user.UpdatedAt)
+	err := s.db.QueryRow(query, user.Username, user.Email, user.PasswordHash.hash, user.Bio).Scan(&user.ID, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		return err
 	}
@@ -119,6 +119,10 @@ func (s *PostgresUserStrore) UpdateUser(user *User) error {
 	rowsEffected, err := result.RowsAffected()
 	if rowsEffected == 0 {
 		return sql.ErrNoRows
+	}
+
+	if err != nil {
+		return err
 	}
 
 	return nil
