@@ -1,11 +1,15 @@
 package api
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
+	"net/http"
 	"regexp"
 
 	"github.com/kodega2016/femapi/internal/store"
+	"github.com/kodega2016/femapi/internal/utils"
+	"github.com/zmap/zgrab2/lib/http"
 )
 
 type registerUserRequest struct {
@@ -48,4 +52,25 @@ func (h *UserHandler) validateRegisterRequest(req *registerUserRequest) error {
 	}
 
 	return nil
+}
+
+func (h *UserHandler) HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
+	var req registerUserRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		h.logger.Panicf("ERROR: decoding handle register request: %w", err)
+		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{
+			"error": "failed to decode the request",
+		})
+		return
+	}
+
+	err = h.validateRegisterRequest(&req)
+	if err != nil {
+		h.logger.Printf("ERROR: validateRegisterRequest %w", err)
+		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{
+			"error": err,
+		})
+		return
+	}
 }
