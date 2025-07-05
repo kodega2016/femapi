@@ -74,3 +74,23 @@ func (s *PostgresUserStrore) GetUserByUsername(username string) (*User, error) {
 
 	return user, nil
 }
+
+func (s *PostgresUserStrore) UpdateUser(user *User) error {
+	query := `
+	UPDATE users
+	SET username=$1, email=$2,bio=$3,updated_at=CURRENT_TIMESTAMP
+	RETURNING updated_at
+	`
+
+	result, err := s.db.Exec(query, user.Username, user.Email, user.Bio)
+	if err != nil {
+		return err
+	}
+
+	rowsEffected, err := result.RowsAffected()
+	if rowsEffected == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
+}
