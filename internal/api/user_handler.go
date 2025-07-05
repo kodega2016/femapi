@@ -69,8 +69,15 @@ func (h *UserHandler) HandleRegisterUser(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		h.logger.Printf("ERROR: validateRegisterRequest %w", err)
 		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
+	}
+	user := &store.User{
+		Username: req.Username,
+		Email:    req.Email,
+	}
+	if req.Bio != "" {
+		user.Bio = req.Bio
 	}
 }
