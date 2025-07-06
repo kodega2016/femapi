@@ -57,7 +57,7 @@ func (h *UserHandler) HandleRegisterUser(w http.ResponseWriter, r *http.Request)
 	var req registerUserRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		h.logger.Panicf("ERROR: decoding handle register request: %w", err)
+		h.logger.Panicf("ERROR: decoding handle register request: %v", err)
 		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{
 			"error": "failed to decode the request",
 		})
@@ -66,7 +66,7 @@ func (h *UserHandler) HandleRegisterUser(w http.ResponseWriter, r *http.Request)
 
 	err = h.validateRegisterRequest(&req)
 	if err != nil {
-		h.logger.Printf("ERROR: validateRegisterRequest %w", err)
+		h.logger.Printf("ERROR: validateRegisterRequest %v", err)
 		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{
 			"error": err.Error(),
 		})
