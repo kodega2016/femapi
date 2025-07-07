@@ -4,12 +4,13 @@
 
 - [Golang API](#golang-api)
   - [Modules](#modules)
-    - [Creating HTTP Server](#creating-http-server)
-    - [Parsing Command Line Arguments](#parsing-command-line-arguments)
-    - [Chi Router](#chi-router)
-    - [Database Connection with psx database driver](#database-connection-with-psx-database-driver)
-    - [Database Migration with goose](#database-migration-with-goose)
-    <!--toc:end-->
+  - [Creating HTTP Server](#creating-http-server)
+  - [Parsing Command Line Arguments](#parsing-command-line-arguments)
+  - [Chi Router](#chi-router)
+  - [Database Connection with psx database driver](#database-connection-with-psx-database-driver)
+  - [Database Migration with goose](#database-migration-with-goose)
+  - [Authentication and Authorization](#authentication-and-authorization)
+  <!--toc:end-->
 
 We are going to build a Golang Restful API from scratch.
 
@@ -69,6 +70,7 @@ For example,we can create a new migration file to add new data field to the
 database table.
 
 Also make sure to always verify the syntax for the fs.
+
 ```go
 //go:embed *.sql
 var FS embed.FS
@@ -79,3 +81,9 @@ There are .sql files inside migrations directory.
 ```go
 err = store.MigrateFS(pgDB, migrations.FS, ".")
 ```
+
+### Authentication and Authorization
+
+We are using the stateless JWT (JSON Web Token) for authentication and authorization.
+
+And also oauth 2.0 for third party authentication.
