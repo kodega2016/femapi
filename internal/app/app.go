@@ -40,7 +40,7 @@ func NewApplication() (*Application, error) {
 	// our handler goes here
 	workoutHandler := api.NewWorkoutHandler(workoutStore, logger)
 	userHandler := api.NewUserHandler(userStore, logger)
-	tokenHandler := api.NewTokenHandler(tokenStore, logger)
+	tokenHandler := api.NewTokenHandler(tokenStore, userStore, logger)
 
 	app := &Application{
 		Logger:         logger,
