@@ -40,6 +40,7 @@ func (h *TokenHandler) HandleCreateToken(w http.ResponseWriter, r *http.Request)
 	}
 
 	// lets get the user
+
 	user, err := h.userStore.GetUserByUsername(req.Username)
 	if err != nil || user == nil {
 		h.logger.Printf("ERROR: GetUserByUsername %v", err)

@@ -24,6 +24,7 @@ func GenerateToken(UserID int, ttl time.Duration, scope string) (*Token, error) 
 	token := &Token{
 		UserID: UserID,
 		Expiry: time.Now().Add(ttl),
+		Scope:  scope,
 	}
 
 	// make bytes address to hold the hash
