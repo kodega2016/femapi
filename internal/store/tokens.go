@@ -43,7 +43,7 @@ func (t *PostgresTokenStore) Insert(token *tokens.Token) error {
 	return err
 }
 
-func (t *PostgresTokenStore) DeleteAllTokensForUser(userID string, scope string) error {
+func (t *PostgresTokenStore) DeleteAllTokensForUser(userID int, scope string) error {
 	query := `
 	DELETE FROM tokens
 	WHERE scope=$1 AND user_id=$2
