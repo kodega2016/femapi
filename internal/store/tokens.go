@@ -42,3 +42,13 @@ func (t *PostgresTokenStore) Insert(token *tokens.Token) error {
 	_, err := t.db.Exec(query, token.Hash, token.UserID, token.Expiry, token.Scope)
 	return err
 }
+
+func (t *PostgresTokenStore) DeleteAllTokensForUser(userID string, scope string) error {
+	query := `
+	DELETE FROM tokens
+	WHERE scope=$1 AND user_id=$2
+	`
+
+	_, err := t.db.Exec(query, scope, userID)
+	return err
+}
