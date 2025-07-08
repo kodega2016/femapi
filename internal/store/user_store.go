@@ -14,19 +14,19 @@ type password struct {
 	hash      []byte
 }
 
-func (p *password) Set(plaintestPassword string) error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(plaintestPassword), 12)
+func (p *password) Set(plaintextPassword string) error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(plaintextPassword), 12)
 	if err != nil {
 		return err
 	}
-	p.plainText = &plaintestPassword
+	p.plainText = &plaintextPassword
 	p.hash = hash
 	return nil
 }
 
-func (p *password) Matches(plaintestPassword string) (bool, error) {
+func (p *password) Matches(plaintextPassword string) (bool, error) {
 	err := bcrypt.CompareHashAndPassword(
-		p.hash, []byte(plaintestPassword),
+		p.hash, []byte(plaintextPassword),
 	)
 	if err != nil {
 		switch {
@@ -141,8 +141,10 @@ func (s *PostgresUserStrore) GetUserToken(scope, plainText string) (*User, error
 	query := `
 	SELECT u.id,u.username,u.email,u.password_hash,u.bio,u.created_at,u.updated_at
 	FROM users u
-	WHERE t.hash=$1 AND t.scope=$2 AND t.expiry>$3
+	INNER JOIN tokens t ON t.user_id=u.id
+	WHERE t.hash=$1 AND t.scope=$2 AND t.expiry > $3
 	`
+
 	user := &User{
 		PasswordHash: password{},
 	}

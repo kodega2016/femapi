@@ -37,7 +37,7 @@ func GenerateToken(UserID int, ttl time.Duration, scope string) (*Token, error) 
 	}
 
 	token.Plaintext = base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(emptyBytes)
-	hash := sha256.Sum224([]byte(token.Plaintext))
+	hash := sha256.Sum256([]byte(token.Plaintext))
 	// convert this into the flexible slice type
 	token.Hash = hash[:]
 	return token, nil

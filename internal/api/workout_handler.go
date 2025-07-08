@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/kodega2016/femapi/internal/middleware"
 	"github.com/kodega2016/femapi/internal/store"
 	"github.com/kodega2016/femapi/internal/utils"
 )
@@ -57,6 +58,14 @@ func (wh *WorkoutHandler) HandleCreateWorkout(w http.ResponseWriter, r *http.Req
 		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{"error": "invalid request sent"})
 		return
 	}
+
+	currentUser := middleware.GetUser(r)
+	if currentUser == nil || currentUser == store.AnonymousUser {
+		utils.WriteJSON(w, http.StatusBadRequest, utils.Envelope{"error": "invalid request sent"})
+		return
+	}
+
+	workout.UserID = currentUser.ID
 
 	createdWorkout, err := wh.workoutStore.CreateWorkout(&workout)
 	if err != nil {
